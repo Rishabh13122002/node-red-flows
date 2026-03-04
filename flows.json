@@ -1,0 +1,721 @@
+[
+    {
+        "id": "7f10328c43db893c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "dd5c9a4ad8d4b233",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "19c4b5367c3d2c5a",
+        "type": "tab",
+        "label": "flows",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a00ed22958a1864f",
+        "type": "mqtt-broker",
+        "name": "bulfro-broker",
+        "broker": "fm.bulfro.com",
+        "port": "20011",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ddd90583be26a096",
+        "type": "inject",
+        "z": "7f10328c43db893c",
+        "name": "123456789101112",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "vidani/fm/123456789101112",
+        "payload": "",
+        "payloadType": "date",
+        "x": 410,
+        "y": 240,
+        "wires": [
+            [
+                "c8dcddc34d6d1e92"
+            ]
+        ]
+    },
+    {
+        "id": "c8dcddc34d6d1e92",
+        "type": "function",
+        "z": "7f10328c43db893c",
+        "name": "function 1",
+        "func": "let incoming={\n  \"type\": \"data\",\n  \"devices\": [\n    {\n      \"id\": 1,\n      \"ai\": [\n        \"00000\",\n        \"00189\",\n        \"29100\",\n        \"00001\",\n        \"00000\",\n        \"00000\",\n        \"00000\",\n        \"00000\",\n        \"00004\",\n        \"00005\",\n        \"00000\",\n        \"00000\",\n        \"00000\",\n        \"10000\",\n        \"00000\",\n        \"00100\",\n        \"00000\",\n        \"01000\",\n        \"00000\",\n        \"00200\",\n        \"16390\",\n        \"00000\",\n        \"00001\",\n        \"00000\",\n        \"00000\",\n        \"00000\",\n        \"00000\"\n      ],\n      \"di\": [\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0\n      ],\n      \"do\": [\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0\n      ],\n      \"flt\": [\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0,\n        0\n      ]\n    }\n  ],\n  \"intent\": \"LO\",\n  \"timer\": \"0\",\n  \"amode\": \"0\",\n  \"onovr\": \"0\",\n  \"offovr\": \"0\",\n  \"time\": \"2026-02-19 17:16:50\"\n}\n\n// Access ai array\nlet ai = incoming.devices[0].ai;\n\nif (!ai || ai.length < 3) {\n    node.error(\"ai array invalid\", msg);\n    return null;\n}\n\n// Convert values\nlet highWord = parseInt(ai[1]) || 0;\nlet lowWord = parseInt(ai[2]) || 0;\nlet lpm = parseInt(ai[0]) / 10 || 0;\n\n// Totalizer calculation\nlet total = (highWord * 65536) + lowWord;\n\n// Final output format\nmsg.payload = {\n    lpm: lpm,\n    total: total\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 240,
+        "wires": [
+            [
+                "032b221f5e77ae48",
+                "f4c59ebee9f1c410"
+            ]
+        ]
+    },
+    {
+        "id": "032b221f5e77ae48",
+        "type": "debug",
+        "z": "7f10328c43db893c",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "f4c59ebee9f1c410",
+        "type": "mqtt out",
+        "z": "7f10328c43db893c",
+        "name": "",
+        "topic": "vidani/fm/123456789101112/data",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "a00ed22958a1864f",
+        "x": 1060,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "634d74715fce104d",
+        "type": "inject",
+        "z": "7f10328c43db893c",
+        "name": "787867816883241",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "bulfro/brwhms-oc-4/787867816883241",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 420,
+        "wires": [
+            [
+                "b69641bdea2180fb"
+            ]
+        ]
+    },
+    {
+        "id": "b69641bdea2180fb",
+        "type": "function",
+        "z": "7f10328c43db893c",
+        "name": "function 2",
+        "func": "let now = new Date();\nlet formattedTime =\n    now.getFullYear() + \"-\" +\n    String(now.getMonth() + 1).padStart(2, '0') + \"-\" +\n    String(now.getDate()).padStart(2, '0') + \" \" +\n    String(now.getHours()).padStart(2, '0') + \":\" +\n    String(now.getMinutes()).padStart(2, '0') + \":\" +\n    String(now.getSeconds()).padStart(2, '0');\nmsg.payload={\n    \"Height\":279,\n    \"date\": formattedTime\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 420,
+        "wires": [
+            [
+                "5adae3f495d437fc"
+            ]
+        ]
+    },
+    {
+        "id": "5adae3f495d437fc",
+        "type": "debug",
+        "z": "7f10328c43db893c",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "eb307024491e0294",
+        "type": "debug",
+        "z": "7f10328c43db893c",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "5615e59b810c2c49",
+        "type": "inject",
+        "z": "7f10328c43db893c",
+        "name": "521331548485641",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "720",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "bulfro/btlm-1/521331548485641",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 540,
+        "wires": [
+            [
+                "28c7affb2fe24f93"
+            ]
+        ]
+    },
+    {
+        "id": "28c7affb2fe24f93",
+        "type": "function",
+        "z": "7f10328c43db893c",
+        "name": "function 3",
+        "func": "let now = new Date();\nlet formattedTime =\n    now.getFullYear() + \"-\" +\n    String(now.getMonth() + 1).padStart(2, '0') + \"-\" +\n    String(now.getDate()).padStart(2, '0') + \" \" +\n    String(now.getHours()).padStart(2, '0') + \":\" +\n    String(now.getMinutes()).padStart(2, '0') + \":\" +\n    String(now.getSeconds()).padStart(2, '0');\n\nmsg.payload={\n    \"Height\":215,\n    \"date\": formattedTime\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 540,
+        "wires": [
+            [
+                "eb307024491e0294"
+            ]
+        ]
+    },
+    {
+        "id": "bdc7e286e0cd860d",
+        "type": "function",
+        "z": "7f10328c43db893c",
+        "name": "function 4",
+        "func": "// Create your base JSON manually\nlet meterData = {\n    \"Meter_sr_no\": 20877,\n    \"IMEI\": \"861409071374186\",\n    \"datetime\": new Date().toLocaleString(),\n    \"data\": {\n        \"1\": 0,       // Flow rate m3/hr\n        \"2\": 25750,   // Totalizer\n        \"3\": 22,\n        \"4\": 25727,\n        \"5\": 3.5\n    }\n};\n\n// Extract values\nlet flowRate = meterData.data[\"1\"];\nlet totalizer = meterData.data[\"2\"];\n\n// Convert\nlet lpm = (flowRate * 1000) / 60;\nlet total = totalizer * 100;\nmsg.payload = {\n    lpm: Number(lpm.toFixed(2)),\n    total: total\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 660,
+        "wires": [
+            [
+                "ee6dbbaf8d65ce0d",
+                "6736cb304be0184f"
+            ]
+        ]
+    },
+    {
+        "id": "ee6dbbaf8d65ce0d",
+        "type": "debug",
+        "z": "7f10328c43db893c",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "200fa81af2f48282",
+        "type": "inject",
+        "z": "7f10328c43db893c",
+        "name": "646111165112121",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "90",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "bulfro/FM-4G/646111165112121",
+        "payload": "",
+        "payloadType": "date",
+        "x": 410,
+        "y": 660,
+        "wires": [
+            [
+                "bdc7e286e0cd860d"
+            ]
+        ]
+    },
+    {
+        "id": "510aab9c6e96c80b",
+        "type": "inject",
+        "z": "7f10328c43db893c",
+        "name": "645213448974516",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "bulfro/dwlr/645213448974516",
+        "payload": "",
+        "payloadType": "date",
+        "x": 410,
+        "y": 780,
+        "wires": [
+            [
+                "3c950c670131a14a"
+            ]
+        ]
+    },
+    {
+        "id": "3c950c670131a14a",
+        "type": "function",
+        "z": "7f10328c43db893c",
+        "name": "function 5",
+        "func": "// ----------------------------\n// CONSTANT TOTAL DEPTH\n// ----------------------------\nlet TOTAL_DEPTH = 60;   // Example total bore depth\n\n// ----------------------------\n// GET PREVIOUS WATER COLUMN\n// ----------------------------\nlet waterColumn = context.get(\"waterColumn\");\n\nif (!waterColumn) {\n    waterColumn = 54.31;  // initial value\n}\n\n// ----------------------------\n// RANDOM CHANGE ±0.5 to ±2 meters\n// ----------------------------\nlet change = 0.5 + Math.random() * 1.5;\nif (Math.random() < 0.5) change = -change;\n\nwaterColumn += change;\n\n// Safety limits\nif (waterColumn < 1) waterColumn = 1;\nif (waterColumn > TOTAL_DEPTH - 1) waterColumn = TOTAL_DEPTH - 1;\n\ncontext.set(\"waterColumn\", waterColumn);\n\n// ----------------------------\n// PRESSURE CALCULATION\n// ----------------------------\nlet waterPressure = waterColumn * 0.0981;\n\n// ----------------------------\n// COLUMN FROM GROUND\n// ----------------------------\nlet waterColumnFromGround = TOTAL_DEPTH - waterColumn;\n\n// ----------------------------\n// UPDATE TIME & DATE\n// ----------------------------\nlet now = new Date();\n\nlet timeStr =\n    String(now.getHours()).padStart(2,'0') +\n    String(now.getMinutes()).padStart(2,'0') +\n    String(now.getSeconds()).padStart(2,'0');\n\nlet dateStr =\n    String(now.getDate()).padStart(2,'0') +\n    String(now.getMonth()+1).padStart(2,'0') +\n    String(now.getFullYear()).slice(-2);\n\n// ----------------------------\n// FINAL JSON STRUCTURE\n// ----------------------------\nmsg.payload = {\n    uuid: \"uuid0000000000000001\",\n    serial: \"DWLR000001\",\n    mobile: \"1234567890\",\n    time: timeStr,\n    date: dateStr,\n    water_column: waterColumn.toFixed(2).padStart(6,'0'),\n    water_temperature: (25 + Math.random()*5).toFixed(1).padStart(5,'0'),\n    water_pressure: waterPressure.toFixed(2).padStart(6,'0'),\n    ambient_temperature: \"30\",\n    ambient_pressure: \"1\",\n    msg_time: \"003\",\n    water_column_from_ground: waterColumnFromGround.toFixed(2).padStart(6,'0'),\n    sensor_voltage: \"012.0\",\n    battery_voltage: \"12.0\",\n    param_1: \"000.0\",\n    param_2: \"0000\",\n    param_3: \"0000\",\n    param_4: \"0000\"\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 780,
+        "wires": [
+            [
+                "33a57b38afcff58c"
+            ]
+        ]
+    },
+    {
+        "id": "33a57b38afcff58c",
+        "type": "debug",
+        "z": "7f10328c43db893c",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "6736cb304be0184f",
+        "type": "mqtt out",
+        "z": "7f10328c43db893c",
+        "name": "",
+        "topic": "vidani/fm/124135568361571/data",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "a00ed22958a1864f",
+        "x": 1060,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "6d8bfa0d48f7be15",
+        "type": "http in",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "url": "/start-simulation",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 300,
+        "y": 220,
+        "wires": [
+            [
+                "b0f569a5d6684790"
+            ]
+        ]
+    },
+    {
+        "id": "b0f569a5d6684790",
+        "type": "json",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 510,
+        "y": 220,
+        "wires": [
+            [
+                "8c2fb84863668d4d"
+            ]
+        ]
+    },
+    {
+        "id": "7dd42c1d18ab3d2e",
+        "type": "debug",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1020,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "22fa6207c7ab2c1f",
+        "type": "mqtt out",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "a00ed22958a1864f",
+        "x": 1030,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "e4c5c081f0267433",
+        "type": "http in",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "url": "/stop-simulation",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 460,
+        "y": 460,
+        "wires": [
+            [
+                "2ef111144440c2a1"
+            ]
+        ]
+    },
+    {
+        "id": "2ef111144440c2a1",
+        "type": "function",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "function 7",
+        "func": "let imei = msg.payload.imei;\n\nlet timers = global.get(\"timers\") || {};\nlet liveData = global.get(\"liveData\") || {};\n\nif (timers[imei]) {\n    clearInterval(timers[imei]);\n    delete timers[imei];\n}\nlet runningDevices = global.get(\"runningDevices\") || {};\nif (runningDevices[imei]) {\n    delete runningDevices[imei];\n    global.set(\"runningDevices\", runningDevices);\n}\ndelete liveData[imei];\n\nglobal.set(\"timers\", timers);\nglobal.set(\"liveData\", liveData);\n\nreturn { payload: { status: \"Stopped\", imei: imei }};",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 460,
+        "wires": [
+            [
+                "c0134c6d92dffac2",
+                "d5d9bf11230a9fc9"
+            ]
+        ]
+    },
+    {
+        "id": "c0134c6d92dffac2",
+        "type": "debug",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d5d9bf11230a9fc9",
+        "type": "http response",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 990,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "c6e4288c28490569",
+        "type": "http response",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1030,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "8c2fb84863668d4d",
+        "type": "function",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "function 6",
+        "func": "// Get incoming configuration\nnode.warn(\"Incoming Payload:\");\nnode.warn(typeof msg.payload);\n\nlet config = msg.payload;\n\n// Validate properly\nif (!config || !config.device_id || !config.imei) {\n    msg.statusCode = 400;\n    msg.payload = { error: \"device_id or imei missing\" };\n    return msg;\n}\n\n// Normalize safely\nlet deviceType = String(config.device_type || \"\").toUpperCase();\nlet deviceId = String(config.device_id || \"\").toLowerCase();\nlet imei = String(config.imei);\nlet frequency = Number(config.frequency) * 1000 * 60;\n// Store timer in global context\nlet timers = global.get(\"timers\") || {};\n\n// If already running, clear first\nif (timers[imei]) {\n    clearInterval(timers[imei]);\n}\n// Build topic\nlet topic = \"\";\n\n// FLOW METER special topic\nif (deviceType === \"FLOW METER\") {\n    topic = \"vidani/fm/\" + imei + \"/data\";\n} else if(deviceType === \"BTLM\"){\n    topic = \"bulfro/btlm-1\" + \"/\" + imei + \"/data\";\n}\nelse if(deviceType === \"DWLR\"){\n    topic = \"bulfro/dwlr/\" + imei + \"/data\"\n}\nelse if(deviceId === \"bfews\"){\n    topic = \"bulfro/bfews/\" + imei + \"/data\"\n}\nelse{\n    topic = \"bulfro/brwhms/\" + imei + \"/data\"\n}\nlet randomnessPercent = Number(config.randomness_percentage || 0);\nlet totalizer = Number(config.totalizer || 0);\nlet hmin = Number(config.height_min || 0);\nlet hmax = Number(config.height_max || 100);\nlet A = Number(config.A || 0);\nlet B = Number(config.B || 0);\nlet currentHeight = hmin;\nlet direction = 1;\nlet cableLength = Number(config.cable_length || 0);\n\nlet mwcMin = Number(config.mwc_min || 0);\nlet mwcMax = Number(config.mwc_max || 0);\nlet pressureMin = Number(config.water_pressure_min || 0);\nlet pressureMax = Number(config.water_pressure_max || 0);\nlet tempMin = Number(config.temperature_min || 0);\nlet tempMax = Number(config.temperature_max || 0);\n\nfunction randomBetween(min, max, pct) {\n    min = Number(min);\n    max = Number(max);\n    pct = Number(pct || 0) / 100;\n    if (isNaN(min) || isNaN(max)) return 0;\n    if (max < min) {\n        let temp = min;\n        min = max;\n        max = temp;\n    }\n    // Base random strictly between min & max\n    let base = Math.random() * (max - min) + min;\n    // Apply controlled randomness\n    let variation = (max - min) * pct;\n    let value = base + (Math.random() * variation - variation / 2);\n    // Clamp value strictly inside range\n    value = Math.max(min, Math.min(max, value));\n    return Number(value.toFixed(2));\n}\n\nfunction calculateBRWHMSFlow(hsensor, hmin, hmax, A, B) {\n    hsensor = Number(hsensor || 0);\n    hmin = Number(hmin || 0);\n    hmax = Number(hmax || 0);\n    A = Number(A || 0);\n    B = Number(B || 0);\n    randomnessPercent = Number(randomnessPercent || 0) / 100;\n    // ✅ Step 1: Add randomness to hsensor\n    let variation = (hmax - hmin) * randomnessPercent;\n    let randomOffset = (Math.random() * variation) - (variation / 2);\n    let randomizedHeight = hsensor + randomOffset;\n    // ✅ Step 2: Clamp inside limits\n    randomizedHeight = Math.max(hmin, Math.min(hmax, randomizedHeight));\n    // Round height\n    randomizedHeight = Number(randomizedHeight.toFixed(2));\n    let Hcal = hmax - Number(randomizedHeight || 0);\n    let flow = 0;\n    if (Hcal <= 0) {\n        flow = 0;\n    }\n    else if (Hcal >= hmax) {\n        flow = 0;\n    }\n    else if (Hcal > 0 && Hcal < hmin) {\n        flow = A * Math.pow(Hcal, B);\n    }\n    else if (Hcal >= hmin && Hcal < hmax) {\n        flow = A * Math.pow(hmin, B);\n    }\n    return Number(flow.toFixed(2));\n}\n\nfunction generateGradualHeight(current, min, max, direction, pct) {\n    // Step size based on range\n    let range = max - min;\n    let baseStep = range * (pct / 100);\n    // Add slight randomness to step\n    let stepVariation = baseStep * 0.3;\n    let step = baseStep + (Math.random() * stepVariation);\n    // Apply direction\n    current += direction * step;\n    // If hits max, reverse\n    if (current >= max) {\n        current = max;\n        direction = -1;\n    }\n    // If hits min, reverse\n    if (current <= min) {\n        current = min;\n        direction = 1;\n    }\n    return {\n        height: Number(current.toFixed(2)),\n        direction: direction\n    };\n}\nfunction randomAround(avg, pct, minRange, maxRange) {\n    avg = Number(avg || 0);\n    pct = Number(pct || 0) / 100;\n    minRange = Number(minRange);\n    maxRange = Number(maxRange);\n    // Step 1: Calculate percentage-based bounds\n    let calcMin = Math.floor(avg * (1 - pct));\n    let calcMax = Math.ceil(avg * (1 + pct));\n    // Step 2: Apply user-defined min/max limits\n    let finalMin = Math.max(calcMin, minRange);\n    let finalMax = Math.min(calcMax, maxRange);\n    // Safety check (if user min/max conflicts)\n    if (finalMax < finalMin) {\n        finalMin = minRange;\n        finalMax = maxRange;\n    }\n    // Step 3: Generate value\n    return Math.floor(Math.random() * (finalMax - finalMin + 1)) + finalMin;\n}\nfunction formatFixed(value, intDigits, decimalDigits) {\n    value = Number(value || 0).toFixed(decimalDigits);\n    let parts = value.split(\".\");\n    parts[0] = parts[0].padStart(intDigits, \"0\");\n    return parts.join(\".\");\n}\n\nfunction formatInteger(value, digits) {\n    return String(Math.floor(value || 0)).padStart(digits, \"0\");\n}\n\nfunction isWithinDateRange(startDateTime, endDateTime) {\n    if (!startDateTime || !endDateTime) return true;\n\n    let now = new Date();\n    let start = new Date(startDateTime);\n    let end = new Date(endDateTime);\n\n    return now >= start && now <= end;\n}\n// Start interval simulation\nlet interval = setInterval(() => {\n    let shiftStart = config.shift_start;\n    let shiftEnd = config.shift_end;\n    let liveData = global.get(\"liveData\") || {};\n    let lastPayload = liveData[imei] || null;\n\n    let payload;\n    let now = new Date();\n    let endDate = new Date(shiftEnd);\n\n    if (shiftEnd && now > endDate) {\n    clearInterval(timers[imei]);\n    delete timers[imei];\n    global.set(\"timers\", timers);\n\n    // remove from running list\n    let runningDevices = global.get(\"runningDevices\") || {};\n    delete runningDevices[imei];\n    global.set(\"runningDevices\", runningDevices);\n\n    return;\n}\n    if (!isWithinDateRange(shiftStart, shiftEnd)) {\n    return;  // do nothing outside date range\n}\n    // Device specific payload\n    // Generate dynamic base value\n    //let dynamicValue = generateRandomValue(baseRange, randomnessPercent);\n\n    switch (deviceType) {\n    // DWLR\n        case \"DWLR\":\n            let safeMwcMax = Math.min(mwcMax, cableLength);\n            let mwc = randomBetween(mwcMin, safeMwcMax, randomnessPercent);\n            let mrl = cableLength - mwc;\n            let waterPressure = randomBetween(pressureMin, pressureMax, randomnessPercent);\n            let waterTemp = randomBetween(tempMin, tempMax, randomnessPercent);\n            let now = new Date();\n            let time = now.toTimeString().slice(0,8).replace(/:/g,\"\").slice(0,6);\n            let date = now.toLocaleDateString(\"en-GB\").replace(/\\//g,\"\").slice(0,6);\n            payload = {\n            uuid: config.uuid || \"uuid0000000000001018\",\n            serial: config.serial || \"DWLR220309\",\n            mobile: config.mobile || \"1234567890\",\n            time: time,\n            date: date,\n            water_column: formatFixed(mwc, 3, 2),\n            water_temperature: formatFixed(waterTemp, 3, 1),\n            water_pressure: formatFixed(waterPressure, 3, 2),\n            ambient_temperature: String(config.ambient_temperature || \"30\"),\n            ambient_pressure: String(config.ambient_pressure || \"1\"),\n            msg_time: String(config.msg_time || \"360\"),\n            water_column_from_ground: formatFixed(mrl, 3, 2),\n            sensor_voltage: formatFixed(config.sensor_voltage || 5, 3, 1),\n            battery_voltage: formatFixed(config.battery_voltage || 12, 2, 1),\n            param_1: \"000.0\",\n            param_2: \"0000\",\n            param_3: \"0000\",\n            param_4: \"0000\",\n            param_5: \"0000\",\n            param_6: \"0000\"\n            }; \n        break;\n    //FLOW METER\n        case \"FLOW METER\":\n            let lpm = randomAround(config.lpm || 100, randomnessPercent,config.flow_min,config.flow_max);\n                totalizer = Number(lastPayload?.total || totalizer || 0);\n                totalizer += lpm;\n                payload = {\n                    lpm: formatFixed(lpm, 5, 1),\n                    total: formatFixed(totalizer, 8, 1)\n                };\n            break;\n    // BRWHMS\n        case \"BRWHMS\":\n            let Hcal = hmax - Number(config.height || 0);\n            let flow = calculateBRWHMSFlow(config.height, hmin, hmax, A, B);\n            totalizer += flow;\n            payload = {\n            Height : String(Number(Hcal.toFixed(2))),\n            flow:String(Number(flow.toFixed(2))),\n            totalizer:String(Number(totalizer.toFixed(2)))\n            };\n        break;\n    // BTLM\n        case \"BTLM\":\n            let result = generateGradualHeight(\n            currentHeight,\n            hmin,\n            hmax,\n            direction,\n            randomnessPercent\n            );\n            currentHeight = result.height;\n            direction = result.direction;\n            let dateTime = new Date().toISOString().replace(\"T\",\" \").slice(0,19);\n            payload = {\n            Height: String(Math.round(currentHeight)),\n            date: dateTime\n            };\n        break;\n        case \"BFEWS\":\n            if(deviceId === \"bfews\"){\n            let heightMin = Number(config.height_min || 0);\n            let heightMax = Number(config.height_max || 0);\n            //let tempMin = Number(config.temperature_min || 0);\n            //let tempMax = Number(config.temperature_max || 0);\n            let height = randomAround(config.height,randomnessPercent,heightMin, heightMax);\n            let temperature = randomAround(config.temperature,randomnessPercent,tempMin, tempMax);\n            payload = {\n                Height: String(height),\n                Temperature: String(temperature),\n                date: new Date().toISOString().replace(\"T\",\" \").slice(0,19)\n            };\n            }\n            else{\n                let heightMin = Number(config.height_min || 0);\n                let heightMax = Number(config.height_max || 0);\n                let height = randomAround(config.height,randomnessPercent,heightMin, heightMax);\n                topic=\"bulfro/bfews-1/\"+imei+\"/data\";\n                payload = {\n                Height: String(height),\n                date: new Date().toISOString().replace(\"T\",\" \").slice(0,19)\n            };\n            }\n        break;\n    }   \n     liveData[imei] = payload;\n        global.set(\"liveData\", liveData);\n        let mqttMsg = {\n            topic: topic,\n            payload: payload\n        };\n        // ✅ SEND TO MQTT ONLY HERE\n        node.warn(\"MQTT MESSAGE:\");\n        node.warn(mqttMsg);\n        node.send([null, mqttMsg]);\n    //est output per device\n   \n\n}, frequency);\n// Save timer\ntimers[imei] = interval;\nglobal.set(\"timers\", timers);\nlet runningDevices = global.get(\"runningDevices\") || {};\nrunningDevices[imei] = {\n    deviceType: deviceType\n};\n\nglobal.set(\"runningDevices\", runningDevices);\nlet responseMsg = {\n    payload: { status: \"Simulation Started\", imei: imei }\n};\nreturn [responseMsg, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 220,
+        "wires": [
+            [
+                "c6e4288c28490569",
+                "7dd42c1d18ab3d2e"
+            ],
+            [
+                "22fa6207c7ab2c1f",
+                "7dd42c1d18ab3d2e"
+            ]
+        ]
+    },
+    {
+        "id": "4cb321b6712d0d2e",
+        "type": "http in",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "url": "/get-simulation/:imei",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 370,
+        "y": 660,
+        "wires": [
+            [
+                "0b31774a322ce8f1"
+            ]
+        ]
+    },
+    {
+        "id": "0b31774a322ce8f1",
+        "type": "function",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "function 8",
+        "func": "let imei = msg.req.params.imei;\n\nlet liveData = global.get(\"liveData\") || {};\n\nmsg.payload = liveData[imei] || null;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 660,
+        "wires": [
+            [
+                "579593821d2b9c67",
+                "728d29420e57c44d"
+            ]
+        ]
+    },
+    {
+        "id": "579593821d2b9c67",
+        "type": "http response",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1010,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "728d29420e57c44d",
+        "type": "debug",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "b7c1122330800c72",
+        "type": "http in",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "url": "/get-running-devices",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 390,
+        "y": 800,
+        "wires": [
+            [
+                "f965569e1c7ad73a"
+            ]
+        ]
+    },
+    {
+        "id": "f965569e1c7ad73a",
+        "type": "function",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "function 9",
+        "func": "let runningDevices = global.get(\"runningDevices\") || {};\nmsg.payload = runningDevices;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 800,
+        "wires": [
+            [
+                "7358208f93264963"
+            ]
+        ]
+    },
+    {
+        "id": "7358208f93264963",
+        "type": "http response",
+        "z": "dd5c9a4ad8d4b233",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 930,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "5e9ee3df2c53ac21",
+        "type": "http in",
+        "z": "19c4b5367c3d2c5a",
+        "name": "",
+        "url": "/convert-temp",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 370,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    }
+]
